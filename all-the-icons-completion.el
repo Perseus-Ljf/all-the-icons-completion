@@ -82,6 +82,7 @@
 ORIG should be `completion-metadata-get'
 METADATA is the metadata.
 PROP is the property which is looked up."
+  (message "nnnn")
   (if (eq prop 'affixation-function)
       (let ((cat (funcall orig metadata 'category))
             (aff (or (funcall orig metadata 'affixation-function)
