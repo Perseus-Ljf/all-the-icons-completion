@@ -35,6 +35,7 @@
 ;;; Code:
 
 (require 'all-the-icons)
+(require 'compat)
 
 (defgroup all-the-icons-completion nil
   "Add icons to completion candidates."
@@ -82,7 +83,6 @@
 ORIG should be `completion-metadata-get'
 METADATA is the metadata.
 PROP is the property which is looked up."
-  (message "nnnn")
   (if (eq prop 'affixation-function)
       (let ((cat (funcall orig metadata 'category))
             (aff (or (funcall orig metadata 'affixation-function)
@@ -137,8 +137,12 @@ PROP is the property which is looked up."
   "Add icons to completion candidates."
   :global t
   (if all-the-icons-completion-mode
-      (advice-add #'completion-metadata-get :around #'all-the-icons-completion-completion-metadata-get)
-    (advice-remove #'completion-metadata-get #'all-the-icons-completion-completion-metadata-get)))
+     (progn
+        (advice-add #'completion-metadata-get :around #'all-the-icons-completion-completion-metadata-get)
+        (advice-add (compat-function completion-metadata-get) :around #'all-the-icons-completion-completion-metadata-get))
+    (progn
+      (advice-remove #'completion-metadata-get #'all-the-icons-completion-completion-metadata-get)
+      (advice-remove (compat-function completion-metadata-get) #'all-the-icons-completion-completion-metadata-get))))
 
 (provide 'all-the-icons-completion)
 ;;; all-the-icons-completion.el ends here
